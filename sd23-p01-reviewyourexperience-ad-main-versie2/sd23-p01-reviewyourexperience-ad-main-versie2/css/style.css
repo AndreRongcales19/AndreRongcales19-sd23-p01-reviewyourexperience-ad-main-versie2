@@ -1,0 +1,108 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/*HOME PAGE*/
+/* voor de logo */
+.navbar-brand img {
+    height: 50px;
+}
+
+.container-main {
+    min-height: 800px;
+}
+
+/* home-title */
+.home-title {
+    font-size: 5vw;
+}
+
+.carousel-item > a > img {
+    height: 40vh;
+}
+
+/*footer*/
+
+/*footer container*/
+.container-footer{
+    height: 10px;
+}
+
+
+/*footer logo*/
+.footer-logo{
+    height: 2vw;
+}
+
+
+/* DE ONDERSTAANDE CODE ZIJN VOOR LOGIN PAGINA*/
+.container-account-main {
+    min-height: 750px;
+}
+
+.logo img {
+    height: 80px;
+}
+.divider {
+    border-left: 1px solid #000;
+    height: 70vh;
+}
+
+/*sign in and sign up button*/
+.sign-in-button, .create-account-button  {
+    background-color: black;
+    color: white;
+}
+
+.form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 65vh;
+}
+
+/* CSS VOOR REVIEW*/
+.review-profile-photo {
+    height: 35px;
+}
+
+/* CSS VOOR PRODUCT PAGINA */
+.bike-size-button {
+    height: 4vh;
+    width: 4vh;
+    background-color: white;
+    border:1px solid black;
+}
+
+.product-img {
+    width: 100%;
+}
+
+/* bike size buttons */
+
+.bike-size-button:hover {
+    background-color: black;
+    color: white;
+}
+
+.buy-button {
+    height: 8vh;
+    width: 15vw;
+    background-color: white;
+    border:1px solid black;
+}
+
+/* buy button */
+
+.buy-button:hover {
+    background-color: black;
+    color: white;
+}
+
+/*CONTACT PAGINA*/
+
+.map-card {
+    max-height: 700px;
+}
+
