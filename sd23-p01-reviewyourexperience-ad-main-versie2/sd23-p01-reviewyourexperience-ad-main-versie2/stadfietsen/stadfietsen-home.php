@@ -62,7 +62,7 @@ font-size: 5vw;
     <!-- Navbar met logo en login -->
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-    <a class="navbar-brand " href="index.php">
+    <a class="navbar-brand " href="../index.php">
             <img src="../img/ad-logo-monogram-circle-with-piece-ribbon-style-vector-29428125.jpg" alt="AD Bikes Logo fs-1">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,7 +94,7 @@ font-size: 5vw;
                     <ul class="dropdown-menu">
                         <li><a class="text-dark text-decoration-none" href="../racefietsen/racefietsen-home.php">Racing Bikes </a></li>
                         <li><a class="text-dark text-decoration-none" href="../mountain/mountain-home.php">Mountain Bikes</a></li>
-                        <li><a class="text-dark text-decoration-none" href="stadfietsen/stadfietsen-home.php">City Bikes</a></li>
+                        <li><a class="text-dark text-decoration-none" href="../stadfietsen/stadfietsen-home.php">City Bikes</a></li>
                     </ul>
                 </li>
             </ul>

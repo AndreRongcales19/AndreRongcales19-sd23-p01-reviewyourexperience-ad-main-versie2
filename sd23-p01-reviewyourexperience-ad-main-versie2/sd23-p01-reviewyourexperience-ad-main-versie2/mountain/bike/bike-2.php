@@ -4,6 +4,7 @@ global $db;
 try {
     include_once('../../classes/Fiets.php');
     include '../../dbconnect.php';
+    include '../../includes/review-filter.php';
 } catch(PDOException $e) {
     die('Geen database server actief');
 }
@@ -23,37 +24,57 @@ $include = [];
 if (isset($_POST["send"])) {
     $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_SPECIAL_CHARS);
     $review = filter_input(INPUT_POST, 'review', FILTER_SANITIZE_SPECIAL_CHARS);
+    $rating = filter_input(INPUT_POST, 'rating', FILTER_VALIDATE_INT);
 
     $name = trim($name);
     $review = trim($review);
+    
     // Validatie
     if (empty($name)) {
         $errors['name'] = "Please enter your name.";
     } else {
         $include['name'] = $name;
     }
+    
     if (empty($review)) {
         $errors['review'] = "Please enter your review.";
     } else {
         $include['review'] = $review;
     }
+    
+    if (!$rating || $rating < 1 || $rating > 5) {
+        $errors['rating'] = "Please select a valid rating (1-5 stars).";
+    } else {
+        $include['rating'] = $rating;
+    }
 
     if (count($errors) === 0) {
-        $stmt = $db->prepare("INSERT INTO review (bike_id, name, content) VALUES (:bike_id, :name, :content)");
+        $stmt = $db->prepare("INSERT INTO review (bike_id, name, content, rating) VALUES (:bike_id, :name, :content, :rating)");
         $stmt->bindParam(':bike_id', $bike_id);
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':content', $review);
+        $stmt->bindParam(':rating', $rating);
         $stmt->execute();
         header("Location: bike-2.php");
         exit;
     }
 }
 
+// Date and Rating Filter Logic
+$filter_type = $_GET['filter_type'] ?? 'all';
+$start_date = $_GET['start_date'] ?? '';
+$end_date = $_GET['end_date'] ?? '';
+$min_rating = (int)($_GET['min_rating'] ?? 0);
+$reviewer_name = $_GET['reviewer_name'] ?? '';
 
-$reviews = $db->prepare("SELECT name, content, created_at FROM review WHERE bike_id = :bike_id ORDER BY created_at DESC");
-$reviews->bindParam(':bike_id', $bike_id);
-$reviews->execute();
-$review_list = $reviews->fetchAll(PDO::FETCH_ASSOC);
+// Get filtered reviews using the reusable function
+$review_list = getFilteredReviews($db, $bike_id, $filter_type, $start_date, $end_date, $min_rating, $reviewer_name);
+
+// Get total review count using the reusable function
+$total_count = getTotalReviewCount($db, $bike_id);
+
+// Get average rating using the reusable function
+$average_rating = getAverageRating($db, $bike_id);
 ?>
 
 <!DOCTYPE html>
@@ -65,6 +86,7 @@ $review_list = $reviews->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="../../css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous" defer></script>
+    <?php renderReviewFilterStyles(); ?>
 </head>
 <body>
 <section class="container-fluid px-5">
@@ -100,47 +122,13 @@ $review_list = $reviews->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <!-- Review Form -->
-            <section class="container-fluid py-4">
-                <h3>Post a Review</h3>
-                <form method="post" action="">
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" value="<?php echo $include['name'] ?? '' ?>">
-                        <div class="form-text text-danger"><?= $errors['name'] ?? '' ?></div>
-                    </div>
+            <?php renderReviewForm($errors, $include); ?>
 
-                    <div class="mb-3">
-                        <label for="review" class="form-label">Review</label>
-                        <textarea name="review" id="review" class="form-control"><?php echo $include['review'] ?? '' ?></textarea>
-                        <div class="form-text text-danger"><?= $errors['review'] ?? '' ?></div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary" name="send">Post Review</button>
-                </form>
-            </section>
+            <!-- Review Filter Section -->
+            <?php renderReviewFilterForm($filter_type, $start_date, $end_date, $min_rating, $reviewer_name, 'bike-2.php'); ?>
 
             <!-- Display Reviews -->
-            <section class="container-fluid py-4">
-                <h3 class="pb-5">Reviews</h3>
-                <?php if ($review_list): ?>
-                    <?php foreach ($review_list as $review): ?>
-                        <div class="card w-75 mb-3 review">
-                            <div class="card-body">
-                                <div class="d-flex">
-                                    <img class="me-1 review-profile-photo" src="../../img/Profile-PNG-File.png" alt="">
-                                    <h5 class="card-title"><strong><?= htmlspecialchars($review['name']) ?></strong></h5>
-                                </div>
-                                <p class="fw-light"><em>(<?= $review['created_at'] ?>)</em></p>
-                                <p class="card-text"><?= htmlspecialchars($review['content']) ?></p>
-                            </div>
-                        </div>
-                        <hr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <p>No reviews yet. Be the first to review!</p>
-                <?php endif; ?>
-            </section>
-
+            <?php renderReviewsSection($review_list, $total_count, $average_rating); ?>
         </div>
     </div>
 </section>
