@@ -60,6 +60,35 @@ if (isset($_POST["send"])) {
     }
 }
 
+// Add PHP logic at the top to handle add to cart
+if (isset($_POST['add_to_cart'])) {
+    $cart_bike = [
+        'id' => $bike_id,
+        'name' => 'SuperSix EVO LAB71',
+        'img' => $fiets->img,
+        'price' => 15499,
+        'quantity' => 1,
+        'img_path' => '/sd23-p01-reviewyourexperience-ad-main-versie2/sd23-p01-reviewyourexperience-ad-main-versie2/img/racefietsen/'
+    ];
+    if (!isset($_SESSION['cart'])) {
+        $_SESSION['cart'] = [];
+    }
+    $found = false;
+    foreach ($_SESSION['cart'] as &$item) {
+        if ($item['id'] == $cart_bike['id']) {
+            $item['quantity']++;
+            $found = true;
+            break;
+        }
+    }
+    unset($item);
+    if (!$found) {
+        $_SESSION['cart'][] = $cart_bike;
+    }
+    header('Location: bike-3.php');
+    exit;
+}
+
 // Date and Rating Filter Logic
 $filter_type = $_GET['filter_type'] ?? 'all';
 $start_date = $_GET['start_date'] ?? '';
@@ -90,15 +119,30 @@ $average_rating = getAverageRating($db, $bike_id);
 </head>
 <body>
 <section class="container-fluid px-5">
-    <nav class="navbar">
-        <a class="text-center navbar-brand" href="../../index.php">
-            <img src="../../img/ad-logo-monogram-circle-with-piece-ribbon-style-vector-29428125.jpg" alt="AD Bikes Logo fs-1">
-        </a>
-        <?php if (isset($_SESSION['user_id'])): ?>
-            <a class="nav-link text-dark" href="../../../login/login.php">Logged In</a>
-        <?php else: ?>
-            <a class="nav-link text-dark" href="../../login/login.php">Log In</a>
-        <?php endif; ?>
+    <nav class="navbar d-flex justify-content-between align-items-center">
+        <div>
+            <a class="text-center navbar-brand" href="../../index.php">
+                <img src="../../img/ad-logo-monogram-circle-with-piece-ribbon-style-vector-29428125.jpg" alt="AD Bikes Logo fs-1">
+            </a>
+        </div>
+        <div class="d-flex align-items-center">
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <a class="nav-link text-dark" href="../../../login/login.php">Logged In</a>
+            <?php else: ?>
+                <a class="nav-link text-dark" href="../../login/login.php">Log In</a>
+            <?php endif; ?>
+            <a href="../../cart.php" class="position-relative ms-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                    <path d="M0 1.5A.5.5 0 0 1 .5 1h1a.5.5 0 0 1 .485.379L2.89 5H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 14H4a.5.5 0 0 1-.491-.408L1.01 2H.5a.5.5 0 0 1-.5-.5zm3.14 4l1.25 6.5h7.22l1.25-6.5H3.14z"/>
+                </svg>
+                <?php $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'], 'quantity')) : 0; ?>
+                <?php if ($cart_count > 0): ?>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <?= $cart_count ?>
+                    </span>
+                <?php endif; ?>
+            </a>
+        </div>
     </nav>
 </section>
 <section class="container-fluid py-4">
@@ -118,7 +162,10 @@ $average_rating = getAverageRating($db, $bike_id);
                 <button class="bike-size-button m-1">61</button>
             </div>
             <div class="col d-flex justify-content-center">
-                <button class="buy-button mt-5">Bestel nu!</button>
+                <form method="post" action="">
+                    <input type="hidden" name="add_to_cart" value="1">
+                    <button type="submit" class="buy-button mt-5">Bestel nu!</button>
+                </form>
             </div>
 
             <!-- Review Form -->

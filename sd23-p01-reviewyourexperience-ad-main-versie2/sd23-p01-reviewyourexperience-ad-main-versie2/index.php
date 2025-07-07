@@ -14,21 +14,20 @@ session_start();
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
+<nav class="navbar navbar-expand-lg bg-body-tertiary d-flex justify-content-between align-items-center px-4">
     <div class="container-fluid">
-        <a class="navbar-brand " href="index.php">
+        <a class="navbar-brand" href="/sd23-p01-reviewyourexperience-ad-main-versie2/sd23-p01-reviewyourexperience-ad-main-versie2/index.php">
             <img src="img/ad-logo-monogram-circle-with-piece-ribbon-style-vector-29428125.jpg" alt="AD Bikes Logo fs-1">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link active" href="contact/contact-us.php">Contact us</a>
                 </li>
                 <?php if (isset($_SESSION['user_id'])): ?>
-                    <!-- ingelogd -->
                     <li class="nav-item">
                         <a class="nav-link active" href="profile/profile.php">Profile</a>
                     </li>
@@ -36,7 +35,6 @@ session_start();
                         <a class="nav-link active" href="logout.php">Logout</a>
                     </li>
                 <?php else: ?>
-                    <!-- niet ingelogd -->
                     <li class="nav-item">
                         <a class="nav-link active" href="login/login.php">Log in</a>
                     </li>
@@ -52,6 +50,19 @@ session_start();
                     </ul>
                 </li>
             </ul>
+            <div class="d-flex align-items-center">
+                <a href="cart.php" class="position-relative ms-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+                        <path d="M0 1.5A.5.5 0 0 1 .5 1h1a.5.5 0 0 1 .485.379L2.89 5H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 14H4a.5.5 0 0 1-.491-.408L1.01 2H.5a.5.5 0 0 1-.5-.5zm3.14 4l1.25 6.5h7.22l1.25-6.5H3.14z"/>
+                    </svg>
+                    <?php $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'], 'quantity')) : 0; ?>
+                    <?php if ($cart_count > 0): ?>
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            <?= $cart_count ?>
+                        </span>
+                    <?php endif; ?>
+                </a>
+            </div>
         </div>
     </div>
 </nav>
