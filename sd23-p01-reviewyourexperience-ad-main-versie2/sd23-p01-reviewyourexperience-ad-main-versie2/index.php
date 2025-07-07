@@ -16,7 +16,7 @@ session_start();
 <body>
 <nav class="navbar navbar-expand-lg bg-body-tertiary d-flex justify-content-between align-items-center px-4">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/sd23-p01-reviewyourexperience-ad-main-versie2/sd23-p01-reviewyourexperience-ad-main-versie2/index.php">
+        <a class="navbar-brand" href="AndreRongcales19-sd23-p01-reviewyourexperience-ad-main-versie2/sd23-p01-reviewyourexperience-ad-main-versie2/sd23-p01-reviewyourexperience-ad-main-versie2/sd23-p01-reviewyourexperience-ad-main-versie2/">
             <img src="img/ad-logo-monogram-circle-with-piece-ribbon-style-vector-29428125.jpg" alt="AD Bikes Logo fs-1">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">

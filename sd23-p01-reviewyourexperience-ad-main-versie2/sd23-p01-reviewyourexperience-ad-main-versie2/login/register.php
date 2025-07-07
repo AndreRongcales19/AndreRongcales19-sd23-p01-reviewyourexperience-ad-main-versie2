@@ -27,7 +27,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bindValue(':password', $hashedPassword, PDO::PARAM_STR);
 
         if ($stmt->execute()) {
-            echo "Registration successful. You can now log in.";
+            // echo "Registration successful. You can now log in.";   
+            header("Location: login.php");
+            exit;
         } else {
             echo "Error: Could not register user.";
         }
